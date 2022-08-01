@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Fortnite from "./Fortnite";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import increment from "./dispatch/counter";
+import loggedin from "./dispatch/logged";
+
 
 function App() {
-  const [entries, setEntries] = useState([]);
-  useEffect(() => {
-    return () => {
-      axios
-        .get("https://fortnite-api.com/v1/banners")
-        .then((data) => {
-          console.log(data.data.data);
-          setEntries(data.data.data);
-        })
-        .catch((err) => console.log(err));
-    };
-  }, []);
-
+  const counter = useSelector((store) => store.counter);
+  const logged = useSelector((store) => store.logged);
+  const dispatch = useDispatch();
   return (
     <div className="App">
-      {entries && (
-        <>
-          {entries.map((entry , index) => {
-            return(
-            <Fortnite key={index} id={entry['id']} name={entry['name']} img={entry['images']['smallIcon']} />)
-          })}
+      <h1>Counter : {counter}</h1>
+      <button onClick={() => dispatch(increment())} >Increment</button>
 
-        </>
-      )}
+      <button onClick={() => dispatch(loggedin())}>logged
+        {logged ? <span> IN</span> : <span> OUT</span>}
+      </button>
     </div>
   );
 }
