@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Fortnite from "./Fortnite";
 
 function App() {
+  const [entries, setEntries] = useState([]);
+  useEffect(() => {
+    return () => {
+      axios
+        .get("https://fortnite-api.com/v1/banners")
+        .then((data) => {
+          console.log(data.data.data);
+          setEntries(data.data.data);
+        })
+        .catch((err) => console.log(err));
+    };
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {entries && (
+        <>
+          {entries.map((entry , index) => {
+            return(
+            <Fortnite key={index} id={entry['id']} name={entry['name']} img={entry['images']['smallIcon']} />)
+          })}
+
+        </>
+      )}
     </div>
   );
 }
